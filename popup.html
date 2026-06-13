@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Auto Life Logger</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="popup-body">
+<div class="popup-root">
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <div class="pu-header">
+    <div class="pu-logo">
+      <span class="logo-dot"></span>
+      <span class="logo-name">Auto Life Logger</span>
+    </div>
+    <div class="pu-header-right">
+      <span class="strict-badge" id="strictBadge" style="display:none" title="Strict Mode active">🔒</span>
+      <button class="btn-icon" id="btnDash" title="Full Dashboard" aria-label="Open full dashboard">
+        <svg width="15" height="15" viewBox="0 0 15 15"><rect x="0.5" y="0.5" width="5.5" height="5.5" rx="1.2" stroke="currentColor" fill="none"/><rect x="9" y="0.5" width="5.5" height="5.5" rx="1.2" stroke="currentColor" fill="none"/><rect x="0.5" y="9" width="5.5" height="5.5" rx="1.2" stroke="currentColor" fill="none"/><rect x="9" y="9" width="5.5" height="5.5" rx="1.2" stroke="currentColor" fill="none"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Session Bar ─────────────────────────────────────────────────────── -->
+  <div class="pu-session" id="puSession">
+    <div class="pulse-dot" id="puDot" style="display:none"></div>
+    <span id="puSessionText" style="color:var(--text-muted)">Loading…</span>
+  </div>
+
+  <!-- ── Score + Streak ──────────────────────────────────────────────────── -->
+  <div class="pu-hero">
+    <div class="pu-score-wrap">
+      <div class="pu-score" id="puScore">—</div>
+      <div class="pu-score-label">Score</div>
+      <div class="pu-score-bar">
+        <div class="pu-score-fill" id="puScoreFill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="pu-divider-v"></div>
+    <div class="pu-streak-wrap">
+      <div class="pu-streak-num" id="puStreak">—</div>
+      <div class="pu-streak-label">🔥 Day Streak</div>
+      <div class="pu-streak-best" id="puStreakBest"></div>
+    </div>
+  </div>
+
+  <!-- ── Stats Grid ──────────────────────────────────────────────────────── -->
+  <div class="pu-stats">
+    <div class="pu-stat">
+      <div class="pu-stat-v" id="psTotal">—</div>
+      <div class="pu-stat-l">Total</div>
+    </div>
+    <div class="pu-stat is-danger">
+      <div class="pu-stat-v" id="psDistract">—</div>
+      <div class="pu-stat-l">Distraction</div>
+    </div>
+    <div class="pu-stat is-success">
+      <div class="pu-stat-v" id="psProductive">—</div>
+      <div class="pu-stat-l">Productive</div>
+    </div>
+    <div class="pu-stat">
+      <div class="pu-stat-v" id="psSites">—</div>
+      <div class="pu-stat-l">Sites</div>
+    </div>
+  </div>
+
+  <!-- ── Top Sites ───────────────────────────────────────────────────────── -->
+  <div class="pu-section-bar">
+    <span class="section-label">Top Sites</span>
+    <span class="pu-sess-count" id="puSessCount"></span>
+  </div>
+  <div class="pu-sites" id="puSites">
+    <div class="empty-msg">Loading…</div>
+  </div>
+
+  <!-- ── Alerts ──────────────────────────────────────────────────────────── -->
+  <div id="puAlerts" style="display:none; padding:0 14px 6px">
+    <div class="pu-section-bar" style="padding:4px 0 4px">
+      <span class="section-label">Active Patterns</span>
+      <span class="badge badge-danger" id="puAlertBadge">0</span>
+    </div>
+    <div id="puAlertList"></div>
+  </div>
+
+  <!-- ── Recent Achievements ─────────────────────────────────────────────── -->
+  <div id="puAchSection" style="display:none; padding:0 14px 4px">
+    <div class="pu-section-bar" style="padding:4px 0 4px">
+      <span class="section-label">Achievements</span>
+    </div>
+    <div class="pu-ach-list" id="puAchList"></div>
+  </div>
+
+  <!-- ── Footer ──────────────────────────────────────────────────────────── -->
+  <div class="pu-footer">
+    <button class="btn-secondary" id="btnSummary">Summary</button>
+    <button class="btn-primary"   id="btnDash2">Dashboard →</button>
+  </div>
+
+</div>
+<script src="popup.js"></script>
+</body>
+</html>

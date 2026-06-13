@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "Auto Life Logger",
+  "version": "2.1.0",
+  "description": "Track your browsing habits, beat distraction loops, and build lasting focus. 100% private - all data stays on your device.",
+
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications",
+    "idle"
+  ],
+  "host_permissions": ["http://*/*", "https://*/*"],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["blocker.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    },
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Auto Life Logger",
+    "default_icon": {
+      "16":  "icons/icon16.png",
+      "48":  "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "options_page": "options.html",
+
+  "icons": {
+    "16":  "icons/icon16.png",
+    "48":  "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

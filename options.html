@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Auto Life Logger Options</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dash-body">
+<main class="options-root">
+  <section class="page-topbar">
+    <div>
+      <h1 class="page-title">Auto Life Logger Options</h1>
+      <div class="page-sub">Privacy, site lists, backups, and strict mode</div>
+    </div>
+    <button class="btn-primary" id="saveBtn">Save</button>
+  </section>
+
+  <section class="panel-row">
+    <div class="panel">
+      <div class="panel-hd">Privacy Controls</div>
+      <div class="toggle-list">
+        <div class="toggle-row"><div><div class="tl">Notifications</div><div class="td">Browser alerts for detected patterns</div></div><label class="toggle"><input type="checkbox" id="notificationsEnabled"><span class="track"></span></label></div>
+        <div class="toggle-row"><div><div class="tl">On-page interventions</div><div class="td">Show focus overlays on distraction pages</div></div><label class="toggle"><input type="checkbox" id="interventionEnabled"><span class="track"></span></label></div>
+        <div class="toggle-row"><div><div class="tl">Daily summary</div><div class="td">Create a local summary after midnight</div></div><label class="toggle"><input type="checkbox" id="dailySummaryEnabled"><span class="track"></span></label></div>
+      </div>
+      <div class="form-group">
+        <label class="fl">Pause tracking until</label>
+        <input type="datetime-local" class="fi" id="trackingPausedUntil">
+      </div>
+      <div class="button-row">
+        <button class="btn-secondary" data-pause="15">15 min</button>
+        <button class="btn-secondary" data-pause="60">1 hour</button>
+        <button class="btn-secondary" data-pause="1440">Today</button>
+        <button class="btn-secondary" id="resumeBtn">Resume</button>
+      </div>
+      <div class="form-group">
+        <label class="fl">Never track these domains</label>
+        <div class="fh">One domain per line. Matching subdomains are also ignored.</div>
+        <textarea class="fi" id="neverTrackDomains" rows="6"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="fl">Keep local history for</label>
+        <input type="number" class="fi" id="dataRetentionDays" min="1" max="3650" style="width:110px"> days
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-hd">Strict Mode</div>
+      <div class="toggle-list">
+        <div class="toggle-row"><div><div class="tl">Enable Strict Mode</div><div class="td">Block domains after ignored warnings</div></div><label class="toggle"><input type="checkbox" id="strictEnabled"><span class="track"></span></label></div>
+        <div class="toggle-row"><div><div class="tl">Scheduled strict hours</div><div class="td">Only enforce blocking during the selected hours</div></div><label class="toggle"><input type="checkbox" id="strictHoursEnabled"><span class="track"></span></label></div>
+        <div class="toggle-row"><div><div class="tl">No bypass mode</div><div class="td">Disable temporary bypasses on blocked pages</div></div><label class="toggle"><input type="checkbox" id="hardLockUntilTomorrow"><span class="track"></span></label></div>
+      </div>
+      <div class="form-grid">
+        <label class="form-group"><span class="fl">Default violations</span><input type="number" class="fi" id="strictThreshold" min="1" max="50"></label>
+        <label class="form-group"><span class="fl">Bypass minutes</span><input type="number" class="fi" id="bypassMinutes" min="1" max="1440"></label>
+        <label class="form-group"><span class="fl">Start hour</span><input type="number" class="fi" id="strictStart" min="0" max="23"></label>
+        <label class="form-group"><span class="fl">End hour</span><input type="number" class="fi" id="strictEnd" min="0" max="23"></label>
+      </div>
+      <div class="form-group">
+        <label class="fl">Per-site thresholds</label>
+        <div class="fh">Format: domain, number. Example: reddit.com, 1</div>
+        <textarea class="fi" id="perSiteThresholds" rows="6"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel-row" style="margin-top:16px">
+    <div class="panel">
+      <div class="panel-hd">Site Lists</div>
+      <div class="panel-row">
+        <label class="form-group" style="flex:1"><span class="fl">Distraction sites</span><textarea class="fi" id="distractionSites" rows="10"></textarea></label>
+        <label class="form-group" style="flex:1"><span class="fl">Productive sites</span><textarea class="fi" id="productiveSites" rows="10"></textarea></label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hd">Backups</div>
+      <div class="button-row">
+        <button class="btn-secondary" id="exportSettingsBtn">Export Settings</button>
+        <button class="btn-secondary" id="exportAllBtn">Export All Data</button>
+      </div>
+      <div class="form-group">
+        <label class="fl">Import settings JSON</label>
+        <input type="file" class="fi" id="importSettingsFile" accept="application/json">
+      </div>
+      <div class="button-row">
+        <button class="btn-secondary" id="resetSettingsBtn">Reset Settings</button>
+        <button class="btn-danger" id="clearDataBtn">Delete All Data</button>
+      </div>
+      <div class="insight-box" id="statusBox" style="display:none;margin-top:12px"></div>
+    </div>
+  </section>
+</main>
+<script src="options.js"></script>
+<footer style="text-align:center;padding:14px 0 6px;font-size:11px;color:#888;">
+  Made by FlegarTech &mdash; <a href="https://paypal.me/TiniFlegar" target="_blank" rel="noopener noreferrer" style="color:#888;">Support development</a>
+</footer>
+</body>
+</html>

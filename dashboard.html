@@ -1,0 +1,326 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Auto Life Logger — Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dash-body">
+<div class="dash-shell">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────────────────── -->
+  <nav class="dash-nav" aria-label="Dashboard sections">
+    <div class="nav-brand">
+      <span class="logo-dot"></span>
+      <span class="nav-brand-name">Auto Life Logger</span>
+    </div>
+
+    <div class="nav-group-label">Analytics</div>
+    <button type="button" class="nav-item active" data-page="overview" aria-current="page">  <span class="ni" aria-hidden="true">📊</span>Overview</button>
+    <button type="button" class="nav-item"        data-page="sites">     <span class="ni" aria-hidden="true">🌐</span>Sites</button>
+    <button type="button" class="nav-item"        data-page="patterns">  <span class="ni" aria-hidden="true">🔁</span>Patterns</button>
+    <button type="button" class="nav-item"        data-page="score">     <span class="ni" aria-hidden="true">🏆</span>Discipline</button>
+
+    <div class="nav-group-label">Progress</div>
+    <button type="button" class="nav-item"        data-page="gamify">    <span class="ni" aria-hidden="true">🎮</span>Gamification</button>
+    <button type="button" class="nav-item"        data-page="summary">   <span class="ni" aria-hidden="true">📋</span>Reports</button>
+    <button type="button" class="nav-item"        data-page="history">   <span class="ni" aria-hidden="true">📅</span>History</button>
+
+    <div class="nav-group-label">Config</div>
+    <button type="button" class="nav-item"        data-page="settings">  <span class="ni" aria-hidden="true">⚙️</span>Settings</button>
+
+    <!-- Live session footer -->
+    <div class="nav-live" id="navLive" style="display:none">
+      <div class="nav-live-header">
+        <div class="pulse-dot pulse-dot-green" id="navLiveDot"></div>
+        <span class="nav-live-label">LIVE</span>
+      </div>
+      <div class="nav-live-domain" id="navLiveDomain"></div>
+    </div>
+  </nav>
+
+  <!-- ── Main ────────────────────────────────────────────────────────────── -->
+  <main class="dash-main">
+
+    <!-- ── Overview ─────────────────────────────────────────────────────── -->
+    <div class="page active" id="page-overview">
+      <div class="page-topbar">
+        <div>
+          <h1 class="page-title">Overview</h1>
+          <div class="page-sub" id="ovDate">Today</div>
+        </div>
+        <div class="topbar-right">
+          <div class="date-nav">
+            <button type="button" id="datePrev" aria-label="Previous day">‹</button>
+            <span id="dateLabel">Today</span>
+            <button type="button" id="dateNext" aria-label="Next day">›</button>
+          </div>
+          <button class="btn-primary" id="btnGenSummary">Generate Summary</button>
+        </div>
+      </div>
+
+      <div class="metric-row" id="ovMetrics">
+        <div class="metric-card accent"> <div class="metric-icon">⏱</div> <div class="metric-val" id="mvTotal">—</div>    <div class="metric-lbl">Total Time</div> </div>
+        <div class="metric-card success"><div class="metric-icon">⚡</div> <div class="metric-val" id="mvProd">—</div>     <div class="metric-lbl">Productive</div> </div>
+        <div class="metric-card danger"> <div class="metric-icon">🎮</div> <div class="metric-val" id="mvDistract">—</div> <div class="metric-lbl">Distraction</div></div>
+        <div class="metric-card">       <div class="metric-icon">🌐</div> <div class="metric-val" id="mvSites">—</div>    <div class="metric-lbl">Sites</div>      </div>
+        <div class="metric-card">       <div class="metric-icon">📌</div> <div class="metric-val" id="mvSess">—</div>     <div class="metric-lbl">Sessions</div>   </div>
+        <div class="metric-card score-mc"><div class="metric-icon">🏆</div><div class="metric-val" id="mvScore" style="color:var(--accent)">—</div><div class="metric-lbl">Score</div></div>
+      </div>
+
+      <div class="panel-row">
+        <div class="panel">
+          <div class="panel-hd">Time Breakdown <span class="panel-sub">by domain</span></div>
+          <canvas id="cSites" height="220"></canvas>
+        </div>
+        <div class="panel">
+          <div class="panel-hd">Focus vs Distraction <span class="panel-sub">today</span></div>
+          <canvas id="cDonut" height="220"></canvas>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-hd">Hourly Activity <span class="panel-sub">browsing intensity by hour</span></div>
+        <div class="heatmap" id="heatmap"></div>
+        <div class="heatmap-labels" id="heatmapLbl"></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-hd">Context Breakdown <span class="panel-sub">what kind of browsing?</span></div>
+        <canvas id="cContext" height="160"></canvas>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-hd">Weekly Trend <span class="panel-sub">productive vs distraction</span></div>
+        <div class="weekly-trend" id="weeklyTrend"></div>
+      </div>
+
+      <div id="ovInsight" style="display:none;margin-bottom:16px">
+        <div class="insight-box" id="ovInsightText"></div>
+      </div>
+    </div>
+
+    <!-- ── Sites ─────────────────────────────────────────────────────────── -->
+    <div class="page" id="page-sites">
+      <div class="page-topbar">
+        <div><h1 class="page-title">Sites</h1><div class="page-sub">Full domain breakdown</div></div>
+      </div>
+      <div class="panel"><div class="panel-hd">All Sites Today</div><div id="sitesTable"></div></div>
+    </div>
+
+    <!-- ── Patterns ──────────────────────────────────────────────────────── -->
+    <div class="page" id="page-patterns">
+      <div class="page-topbar">
+        <div><h1 class="page-title">Patterns</h1><div class="page-sub">Detected distraction patterns</div></div>
+      </div>
+      <div class="panel-row">
+        <div class="panel">
+          <div class="panel-hd">Recent Detections</div>
+          <div id="patternList"><div class="empty-msg">No patterns detected yet.</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-hd">Last 7 Days <span class="panel-sub">pattern frequency</span></div>
+          <canvas id="cPatterns" height="220"></canvas>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-hd">Intervention Responses</div>
+        <div id="ivStats"></div>
+      </div>
+    </div>
+
+    <!-- ── Discipline ─────────────────────────────────────────────────────── -->
+    <div class="page" id="page-score">
+      <div class="page-topbar">
+        <div><h1 class="page-title">Discipline Score</h1><div class="page-sub">0–100 daily focus quality</div></div>
+        <button class="btn-primary" id="btnRecompute">Recompute Today</button>
+      </div>
+      <div class="panel-row">
+        <div class="panel" style="flex:0 0 300px">
+          <div class="panel-hd">Today</div>
+          <div class="score-display">
+            <div class="score-big" id="scoreBig">—</div>
+            <div class="score-grade" id="scoreGrade"></div>
+          </div>
+          <div id="scoreComponents" style="margin-top:18px"></div>
+        </div>
+        <div class="panel" style="flex:1">
+          <div class="panel-hd">History <span class="panel-sub">last 14 days</span></div>
+          <canvas id="cScore" height="220"></canvas>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-hd">How It's Calculated</div>
+        <div class="score-formula">
+          <div class="formula-item accent">  <span class="fi-pts">40 pts</span><div class="fi-label">Productive time</div><div class="fi-hint">% of total time on productive sites</div></div>
+          <div class="formula-item danger">  <span class="fi-pts">30 pts</span><div class="fi-label">Low distraction</div><div class="fi-hint">Penalised for distraction time ratio</div></div>
+          <div class="formula-item warning"> <span class="fi-pts">20 pts</span><div class="fi-label">No loops</div><div class="fi-hint">−4 pts per distraction loop detected</div></div>
+          <div class="formula-item success"> <span class="fi-pts">10 pts</span><div class="fi-label">Intervention rate</div><div class="fi-hint">% of warnings where you stayed focused</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Gamification ───────────────────────────────────────────────────── -->
+    <div class="page" id="page-gamify">
+      <div class="page-topbar">
+        <div><h1 class="page-title">Gamification</h1><div class="page-sub">Streaks &amp; achievements</div></div>
+      </div>
+      <div class="panel-row">
+        <div class="panel" style="flex:0 0 280px">
+          <div class="panel-hd">Streak</div>
+          <div class="streak-display">
+            <div class="streak-fire">🔥</div>
+            <div class="streak-number" id="gStreak">0</div>
+            <div class="streak-label">consecutive good days</div>
+            <div class="streak-best" id="gStreakBest"></div>
+          </div>
+          <div class="streak-rules">
+            <div class="streak-rule">✅ Score ≥ 70 = Good day (streak +1)</div>
+            <div class="streak-rule">❌ Score &lt; 40 = Bad day (streak reset)</div>
+            <div class="streak-rule">⏸ No data = Day skipped (no change)</div>
+          </div>
+        </div>
+        <div class="panel" style="flex:1">
+          <div class="panel-hd">Score History <span class="panel-sub">with streak overlay</span></div>
+          <canvas id="cStreakHistory" height="200"></canvas>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-hd">Achievements <span id="gAchCount" class="panel-sub"></span></div>
+        <div class="ach-grid" id="achGrid"></div>
+      </div>
+    </div>
+
+    <!-- ── Reports ────────────────────────────────────────────────────────── -->
+    <div class="page" id="page-summary">
+      <div class="page-topbar">
+        <div><h1 class="page-title">Daily Reports</h1><div class="page-sub">Auto-generated summaries</div></div>
+        <button class="btn-primary" id="btnGenReport">Generate Today's Report</button>
+      </div>
+      <div id="summaryList"><div class="empty-msg" style="padding:60px">No reports yet. Browse for a while then generate one.</div></div>
+    </div>
+
+    <!-- ── History ────────────────────────────────────────────────────────── -->
+    <div class="page" id="page-history">
+      <div class="page-topbar">
+        <div><h1 class="page-title">History</h1><div class="page-sub">Last 14 days at a glance</div></div>
+      </div>
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-hd">Daily Active Time <span class="panel-sub">last 14 days</span></div>
+        <canvas id="cHistory" height="180"></canvas>
+      </div>
+      <div id="historyList"></div>
+    </div>
+
+    <!-- ── Settings ───────────────────────────────────────────────────────── -->
+    <div class="page" id="page-settings">
+      <div class="page-topbar">
+        <div><h1 class="page-title">Settings</h1><div class="page-sub">Customize tracking &amp; strict mode</div></div>
+        <button class="btn-primary" id="btnSave">Save Settings</button>
+      </div>
+
+      <div class="panel-row">
+        <div class="panel">
+          <div class="panel-hd">Alerts &amp; Interventions</div>
+          <div class="toggle-list">
+            <div class="toggle-row"><div><div class="tl">Enable notifications</div><div class="td">Browser push alerts for patterns</div></div><label class="toggle"><input type="checkbox" id="sNotif"><span class="track"></span></label></div>
+            <div class="toggle-row"><div><div class="tl">On-page interventions</div><div class="td">Overlay on distraction pages</div></div><label class="toggle"><input type="checkbox" id="sInterv"><span class="track"></span></label></div>
+            <div class="toggle-row"><div><div class="tl">Daily summary notification</div><div class="td">Report at midnight</div></div><label class="toggle"><input type="checkbox" id="sDaily"><span class="track"></span></label></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-hd">Thresholds</div>
+          <div class="form-group"><label class="fl">Warning threshold (min)</label><div class="fh">Warn after spending this many minutes on a distraction site</div><input type="number" class="fi" id="sThresh" min="5" max="480" step="5" style="width:90px"></div>
+          <div class="form-group"><label class="fl">Loop: visits</label><div class="fh">Visits within window that triggers a loop alert</div><input type="number" class="fi" id="sLoopV" min="2" max="20" style="width:90px"></div>
+          <div class="form-group"><label class="fl">Loop: window (min)</label><div class="fh">Time window for loop detection</div><input type="number" class="fi" id="sLoopW" min="5" max="120" step="5" style="width:90px"></div>
+          <div class="form-group"><label class="fl">Data retention (days)</label><div class="fh">Old local sessions are pruned automatically</div><input type="number" class="fi" id="sRetention" min="1" max="3650" style="width:90px"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-hd">Privacy Controls</div>
+        <div class="form-group"><label class="fl">Pause tracking until</label><input type="datetime-local" class="fi" id="sPauseUntil" style="max-width:230px"></div>
+        <div class="button-row">
+          <button class="btn-secondary" data-dash-pause="15">15 min</button>
+          <button class="btn-secondary" data-dash-pause="60">1 hour</button>
+          <button class="btn-secondary" data-dash-pause="1440">Today</button>
+          <button class="btn-secondary" id="btnResumeTracking">Resume</button>
+        </div>
+        <div class="form-group"><label class="fl">Never track domains</label><div class="fh">One domain per line; subdomains are ignored too.</div><textarea class="fi" id="sNeverTrack" rows="5"></textarea></div>
+      </div>
+
+      <!-- Strict Mode Panel -->
+      <div class="panel strict-panel" style="margin-top:16px">
+        <div class="panel-hd" style="color:var(--danger)">🔒 Strict Mode <span class="badge badge-danger" style="margin-left:8px;font-size:10px" id="sStrictStatus">OFF</span></div>
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;line-height:1.6">
+          When enabled, sites are automatically blocked after <strong id="sThreshDisplay">3</strong> ignored warnings. Blocked sites show a lock screen until you explicitly bypass them.
+        </div>
+        <div class="toggle-list">
+          <div class="toggle-row">
+            <div><div class="tl">Enable Strict Mode</div><div class="td">Block sites after repeated violations</div></div>
+            <label class="toggle"><input type="checkbox" id="sStrict"><span class="track"></span></label>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:12px">
+          <label class="fl">Violation threshold</label>
+          <div class="fh">Ignored warnings before a site is blocked</div>
+          <input type="number" class="fi" id="sStrictThresh" min="1" max="10" style="width:90px">
+        </div>
+        <div class="form-group" style="margin-top:12px">
+          <label class="fl">Bypass minutes</label>
+          <div class="fh">How long a temporary strict-mode bypass lasts</div>
+          <input type="number" class="fi" id="sStrictBypass" min="1" max="1440" style="width:90px">
+        </div>
+        <div class="toggle-list">
+          <div class="toggle-row"><div><div class="tl">Scheduled strict hours</div><div class="td">Only enforce blocks during configured hours</div></div><label class="toggle"><input type="checkbox" id="sStrictHours"><span class="track"></span></label></div>
+          <div class="toggle-row"><div><div class="tl">No bypass mode</div><div class="td">Hide temporary bypasses from blocked pages</div></div><label class="toggle"><input type="checkbox" id="sStrictHard"><span class="track"></span></label></div>
+        </div>
+        <div class="form-grid">
+          <label class="form-group"><span class="fl">Start hour</span><input class="fi" type="number" id="sStrictStart" min="0" max="23"></label>
+          <label class="form-group"><span class="fl">End hour</span><input class="fi" type="number" id="sStrictEnd" min="0" max="23"></label>
+        </div>
+        <div class="form-group"><label class="fl">Per-site thresholds</label><div class="fh">Format: domain, number</div><textarea class="fi" id="sStrictPerSite" rows="4"></textarea></div>
+        <div style="margin-top:16px">
+          <div class="fl" style="margin-bottom:8px">Currently blocked sites</div>
+          <div id="blockedSitesList" class="blocked-list"></div>
+          <button class="btn-secondary" id="btnUnblockAll" style="margin-top:8px;font-size:12px">Unblock All Sites</button>
+        </div>
+      </div>
+
+      <div class="panel-row" style="margin-top:16px">
+        <div class="panel">
+          <div class="panel-hd">Distraction Sites</div>
+          <div class="fh" style="margin-bottom:8px">One domain per line (e.g. youtube.com)</div>
+          <textarea class="fi" id="sDisSites" rows="10"></textarea>
+        </div>
+        <div class="panel">
+          <div class="panel-hd">Productive Sites</div>
+          <div class="fh" style="margin-bottom:8px">One domain per line (e.g. github.com)</div>
+          <textarea class="fi" id="sProdSites" rows="10"></textarea>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-hd">Privacy</div>
+        <div style="font-size:13px;color:var(--text-secondary);line-height:1.7">
+          🔐 <strong>All data is stored locally on your device</strong> using Chrome's built-in <code>chrome.storage.local</code> API.<br>
+          No data is ever sent to any server. No external API calls are made. There are no analytics, no telemetry, no tracking of any kind.<br>
+          You can delete all data at any time using the button below.
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px">
+          <button class="btn-danger" id="btnClear">Delete All Data</button>
+          <button class="btn-secondary" id="btnExport">Export JSON</button>
+          <button class="btn-secondary" id="btnExportSettings">Export Settings</button>
+          <button class="btn-secondary" id="btnImportSettings">Import Settings</button>
+          <button class="btn-secondary" id="btnOptions">Options Page</button>
+          <input type="file" id="settingsImportFile" accept="application/json" style="display:none">
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script src="dashboard.js"></script>
+</body>
+</html>

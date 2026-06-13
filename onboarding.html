@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Set Up Auto Life Logger</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dash-body">
+<main class="onboarding-root">
+  <section class="onboarding-hero">
+    <span class="logo-dot"></span>
+    <h1 class="page-title">Auto Life Logger</h1>
+    <p class="page-sub">Choose how the extension should classify sites and when it should interrupt distraction loops. Everything stays in local Chrome storage.</p>
+  </section>
+
+  <section class="panel-row">
+    <div class="panel">
+      <div class="panel-hd">Site Lists</div>
+      <label class="form-group"><span class="fl">Distraction sites</span><textarea class="fi" id="distractionSites" rows="10"></textarea></label>
+      <label class="form-group"><span class="fl">Productive sites</span><textarea class="fi" id="productiveSites" rows="8"></textarea></label>
+    </div>
+    <div class="panel">
+      <div class="panel-hd">Focus Rules</div>
+      <div class="toggle-list">
+        <div class="toggle-row"><div><div class="tl">Notifications</div><div class="td">Show browser alerts</div></div><label class="toggle"><input type="checkbox" id="notificationsEnabled" checked><span class="track"></span></label></div>
+        <div class="toggle-row"><div><div class="tl">On-page interventions</div><div class="td">Show focus overlays</div></div><label class="toggle"><input type="checkbox" id="interventionEnabled" checked><span class="track"></span></label></div>
+        <div class="toggle-row"><div><div class="tl">Strict Mode</div><div class="td">Block sites after ignored warnings</div></div><label class="toggle"><input type="checkbox" id="strictEnabled"><span class="track"></span></label></div>
+      </div>
+      <div class="form-grid">
+        <label class="form-group"><span class="fl">Warn after minutes</span><input class="fi" type="number" id="warningThresholdMins" min="1" value="30"></label>
+        <label class="form-group"><span class="fl">Loop visits</span><input class="fi" type="number" id="loopDetectionVisits" min="2" value="4"></label>
+        <label class="form-group"><span class="fl">Loop window min</span><input class="fi" type="number" id="loopDetectionWindowMins" min="1" value="15"></label>
+        <label class="form-group"><span class="fl">Strict violations</span><input class="fi" type="number" id="strictThreshold" min="1" value="3"></label>
+      </div>
+      <div class="button-row">
+        <button class="btn-primary" id="finishBtn">Start Tracking</button>
+        <button class="btn-secondary" id="optionsBtn">Advanced Options</button>
+      </div>
+      <div class="insight-box" id="statusBox" style="display:none;margin-top:12px"></div>
+    </div>
+  </section>
+</main>
+<script src="onboarding.js"></script>
+</body>
+</html>

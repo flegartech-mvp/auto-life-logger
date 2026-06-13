@@ -1,0 +1,19 @@
+{
+  "name": "auto-life-logger-extension",
+  "version": "2.1.0",
+  "private": true,
+  "description": "Local-first Chrome extension for browsing habit tracking and focus interventions.",
+  "scripts": {
+    "lint": "node scripts/validate-extension.js",
+    "test": "npm run test:chrome && npm run test:ui",
+    "test:chrome": "node scripts/smoke-chrome.js",
+    "test:ui": "playwright test tests/ui-smoke.spec.js",
+    "smoke": "npm run test",
+    "validate": "npm run lint && npm run test",
+    "package": "node scripts/package-extension.js",
+    "store-assets": "node scripts/generate-store-assets.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}

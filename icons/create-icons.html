@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate Auto Life Logger Icons</title>
+  <style>
+    body { background: #0d0d1a; color: #e8eaf6; font-family: -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 40px; gap: 20px; }
+    h1 { font-size: 20px; margin-bottom: 8px; }
+    p  { color: #8891b2; font-size: 13px; text-align: center; max-width: 400px; line-height: 1.6; }
+    canvas { display: none; }
+    .btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    button { background: linear-gradient(135deg,#4e9de8,#5b6af0); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    button:hover { opacity: 0.85; }
+    .previews { display: flex; gap: 16px; align-items: flex-end; margin-top: 12px; }
+    .preview  { text-align: center; }
+    .preview small { display: block; font-size: 11px; color: #4a5070; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <h1>🖼 Icon Generator</h1>
+  <p>Click "Generate Icons" to create the icon PNG files needed by the Chrome extension. Save each downloaded file into this <code>icons/</code> folder.</p>
+
+  <canvas id="c16"  width="16"  height="16"></canvas>
+  <canvas id="c48"  width="48"  height="48"></canvas>
+  <canvas id="c128" width="128" height="128"></canvas>
+
+  <div class="previews">
+    <div class="preview"><canvas id="p16"  width="16"  height="16"  style="display:block;image-rendering:pixelated;width:32px;height:32px"></canvas><small>16px</small></div>
+    <div class="preview"><canvas id="p48"  width="48"  height="48"  style="display:block;width:48px;height:48px"></canvas><small>48px</small></div>
+    <div class="preview"><canvas id="p128" width="128" height="128" style="display:block;width:96px;height:96px"></canvas><small>128px</small></div>
+  </div>
+
+  <div class="btns">
+    <button id="btnGen">Generate &amp; Preview Icons</button>
+    <button id="btnDl16">Download icon16.png</button>
+    <button id="btnDl48">Download icon48.png</button>
+    <button id="btnDl128">Download icon128.png</button>
+  </div>
+
+  <p style="margin-top:4px">After downloading, rename files to <strong>icon16.png</strong>, <strong>icon48.png</strong>, <strong>icon128.png</strong> if needed, and place them in the <code>icons/</code> folder.</p>
+
+  <script>
+    function drawIcon(canvas, size) {
+      const ctx = canvas.getContext('2d');
+      const r   = size / 2;
+      const cr  = size * 0.18;
+
+      // Background
+      const bg = ctx.createLinearGradient(0, 0, size, size);
+      bg.addColorStop(0, '#0f0f1a');
+      bg.addColorStop(1, '#1a1a2e');
+      ctx.fillStyle = bg;
+      roundRect(ctx, 0, 0, size, size, cr);
+      ctx.fill();
+
+      // Outer glow ring
+      const ringR  = size * 0.38;
+      const ringW  = Math.max(1, size * 0.055);
+      ctx.strokeStyle = 'rgba(78,157,232,0.3)';
+      ctx.lineWidth   = ringW;
+      ctx.beginPath();
+      ctx.arc(r, r, ringR, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Inner circle
+      const grad = ctx.createLinearGradient(r - ringR, r - ringR, r + ringR, r + ringR);
+      grad.addColorStop(0, '#4e9de8');
+      grad.addColorStop(1, '#5b6af0');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(r, r, ringR - ringW * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Center: lightning bolt / focus symbol
+      const dotR = size * 0.14;
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(r, r, dotR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Pulsing arcs (activity indicator)
+      if (size >= 48) {
+        const arcR = ringR + ringW * 1.5;
+        ctx.strokeStyle = 'rgba(78,157,232,0.5)';
+        ctx.lineWidth   = Math.max(1, size * 0.03);
+        ctx.beginPath();
+        ctx.arc(r, r, arcR, -Math.PI * 0.7, -Math.PI * 0.1);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(r, r, arcR, Math.PI * 0.3, Math.PI * 0.9);
+        ctx.stroke();
+      }
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function download(canvasId, filename) {
+      const c = document.getElementById(canvasId);
+      const a = document.createElement('a');
+      a.href     = c.toDataURL('image/png');
+      a.download = filename;
+      a.click();
+    }
+
+    document.getElementById('btnGen').addEventListener('click', () => {
+      [['c16',16],['c48',48],['c128',128]].forEach(([id, sz]) => {
+        const c = document.getElementById(id);
+        drawIcon(c, sz);
+        // Copy to preview
+        const p = document.getElementById('p' + sz);
+        const pctx = p.getContext('2d');
+        pctx.clearRect(0, 0, sz, sz);
+        pctx.drawImage(c, 0, 0);
+      });
+    });
+
+    document.getElementById('btnDl16').addEventListener('click',  () => download('c16',  'icon16.png'));
+    document.getElementById('btnDl48').addEventListener('click',  () => download('c48',  'icon48.png'));
+    document.getElementById('btnDl128').addEventListener('click', () => download('c128', 'icon128.png'));
+
+    // Auto-generate on load
+    window.addEventListener('load', () => document.getElementById('btnGen').click());
+  </script>
+</body>
+</html>
