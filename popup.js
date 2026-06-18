@@ -155,11 +155,26 @@ function renderAchievements(achs) {
   const list = document.getElementById('puAchList');
   if (!achs?.length) { sec.style.display = 'none'; return; }
   sec.style.display = 'block';
-  list.innerHTML = achs.map(a => `
-    <div class="pu-ach-badge" title="${esc(a.desc)}">
-      <span class="pu-ach-icon">${esc(a.icon)}</span>
-      <span class="pu-ach-name">${esc(a.title)}</span>
-    </div>`).join('');
+  const defs = {
+    first_session: { title: 'First Steps', desc: 'Logged your first browsing session', icon: '🎯' },
+    focus_60: { title: 'Deep Focus', desc: '60+ productive minutes in one day', icon: '⚡' },
+    clean_day: { title: 'Crystal Clear', desc: 'A full day with zero distraction time', icon: '💎' },
+    streak_3: { title: 'Hot Streak', desc: '3 consecutive good days', icon: '🔥' },
+    streak_7: { title: 'Weekly Warrior', desc: '7 consecutive good days', icon: '💪' },
+    score_80: { title: 'Laser Focus', desc: 'Discipline score of 80 or higher', icon: '🎖️' },
+  };
+  list.innerHTML = achs.map(a => {
+    const key = typeof a === 'string' ? a : a?.id;
+    const item = { ...(defs[key] || {}), ...(typeof a === 'string' ? { id: a } : (a || {})) };
+    const title = item.title || item.name || 'Achievement';
+    const desc = item.desc || item.description || title;
+    const icon = item.icon || '★';
+    return `
+    <div class="pu-ach-badge" title="${esc(desc)}">
+      <span class="pu-ach-icon">${esc(icon)}</span>
+      <span class="pu-ach-name">${esc(title)}</span>
+    </div>`;
+  }).join('');
 }
 
 // ─── Summary Popover ─────────────────────────────────────────────────────────
